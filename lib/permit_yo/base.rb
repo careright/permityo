@@ -74,21 +74,21 @@ module PermitYo
 
       # Handle redirection within permit if authorization is denied.
       def handle_redirection
-        return if not self.respond_to?(:redirect_to)
+        return if not self.respond_to?(:redirect_to, true)
         # Store url in session for return if this is available from authentication
-        send(Rails.application.config.permit_yo.store_location_method) if respond_to?(Rails.application.config.permit_yo.store_location_method)
+        send(Rails.application.config.permit_yo.store_location_method) if respond_to?(Rails.application.config.permit_yo.store_location_method, true)
         if @current_user && @current_user != :false
           respond_to do |format|
             format.html do                
-              if self.respond_to? :handle_permission_denied_redirection_for_html
+              if self.respond_to?(:handle_permission_denied_redirection_for_html, true)
                 handle_permission_denied_redirection_for_html
               else
                 flash[Rails.application.config.permit_yo.permission_denied_flash] = @options[:permission_denied_message] || t('permit_yo.permission_denied')
-                redirect_to @options[:permission_denied_redirection] || (self.respond_to?(:permission_denied_redirection) ? permission_denied_redirection : Rails.application.config.permit_yo.permission_denied_redirection)
+                redirect_to @options[:permission_denied_redirection] || (self.respond_to?(:permission_denied_redirection, true) ? permission_denied_redirection : Rails.application.config.permit_yo.permission_denied_redirection)
               end
             end
             format.all do
-              if self.respond_to? :"handle_permission_denied_redirection_for_#{params[:format]}"
+              if self.respond_to?(:"handle_permission_denied_redirection_for_#{params[:format]}", true)
                 self.send :"handle_permission_denied_redirection_for_#{params[:format]}"
               else
                 render :text => nil, :status => :forbidden
@@ -98,15 +98,15 @@ module PermitYo
         else
           respond_to do |format|
             format.html do
-              if self.respond_to? :handle_require_user_redirection_for_html
+              if self.respond_to?(:handle_require_user_redirection_for_html)
                 handle_require_user_redirection_for_html
               else
                 flash[Rails.application.config.permit_yo.require_user_flash] = @options[:require_user_message] || t('permit_yo.require_user')
-                redirect_to @options[:require_user_redirection] || (self.respond_to?(:require_user_redirection) ? require_user_redirection : Rails.application.config.permit_yo.require_user_redirection) 
+                redirect_to @options[:require_user_redirection] || (self.respond_to?(:require_user_redirection, true) ? require_user_redirection : Rails.application.config.permit_yo.require_user_redirection) 
               end
             end
             format.all do
-              if self.respond_to? :"handle_require_user_redirection_for_#{params[:format]}"
+              if self.respond_to?(:"handle_require_user_redirection_for_#{params[:format]}", true)
                 self.send :"handle_require_user_redirection_for_#{params[:format]}"
               else
                 render :text => nil, :status => :unauthorized
@@ -123,7 +123,7 @@ module PermitYo
           @options[:user]
         elsif @options[:get_user_method]
           send(@options[:get_user_method])
-        elsif self.respond_to? Rails.application.config.permit_yo.current_user_method
+        elsif self.respond_to?(Rails.application.config.permit_yo.current_user_method, true)
           self.send Rails.application.config.permit_yo.current_user_method
         elsif not @options[:allow_guests]
           raise(CannotObtainUserObject, "Couldn't find ##{Rails.application.config.permit_yo.current_user_method} or @user, and nothing appropriate found in hash")
