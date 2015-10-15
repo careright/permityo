@@ -26,6 +26,7 @@ Dummy::Application.configure do
   config.action_mailer.delivery_method = :test
 
   config.active_support.deprecation = :stderr
+  config.active_support.test_order = :random
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,
