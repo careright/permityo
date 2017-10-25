@@ -1,11 +1,11 @@
 class DummyController < ApplicationController
-  
-  before_filter :set_the_instance_variable
+
+  before_action :set_the_instance_variable
 
   permit "dogooder", :only => :do_good
   permit "doeviler", :only => :do_evil
   permit "owner of variable", :only => :have_instance_variables
-    
+
   class Ownership
     def accepts_role?(role, user)
       return true
@@ -13,15 +13,15 @@ class DummyController < ApplicationController
   end
 
   def do_good
-    render :text => "done!"
+    render :html => "done!"
   end
-  
+
   def do_evil
-    render :text => "done! ...sigh."
-  end  
+    render :html => "done! ...sigh."
+  end
 
   def have_instance_variables
-    render :text => "done!"
+    render :html => "done!"
   end
 
 protected
@@ -30,7 +30,7 @@ protected
   end
 
   def set_the_instance_variable
-    @variable = Ownership.new 
+    @variable = Ownership.new
   end
 
 end

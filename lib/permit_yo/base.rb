@@ -21,7 +21,7 @@ module PermitYo
           filter_args.merge!(args.last.reject {|k,v| not filter_keys.include? k })
           eval_args.merge!(args.last.reject {|k,v| filter_keys.include? k })
         end
-        before_filter(filter_args) do |controller|
+        before_action(filter_args) do |controller|
           controller.permit(authorization_expression, eval_args)
         end
       end
@@ -79,7 +79,7 @@ module PermitYo
         send(Rails.application.config.permit_yo.store_location_method) if respond_to?(Rails.application.config.permit_yo.store_location_method, true)
         if @current_user && @current_user != :false
           respond_to do |format|
-            format.html do                
+            format.html do
               if self.respond_to?(:handle_permission_denied_redirection_for_html, true)
                 handle_permission_denied_redirection_for_html
               else
@@ -91,7 +91,7 @@ module PermitYo
               if self.respond_to?(:"handle_permission_denied_redirection_for_#{params[:format]}", true)
                 self.send :"handle_permission_denied_redirection_for_#{params[:format]}"
               else
-                render :text => nil, :status => :forbidden
+                head :forbidden
               end
             end
           end
@@ -102,14 +102,14 @@ module PermitYo
                 handle_require_user_redirection_for_html
               else
                 flash[Rails.application.config.permit_yo.require_user_flash] = @options[:require_user_message] || t('permit_yo.require_user')
-                redirect_to @options[:require_user_redirection] || (self.respond_to?(:require_user_redirection, true) ? require_user_redirection : Rails.application.config.permit_yo.require_user_redirection) 
+                redirect_to @options[:require_user_redirection] || (self.respond_to?(:require_user_redirection, true) ? require_user_redirection : Rails.application.config.permit_yo.require_user_redirection)
               end
             end
             format.all do
               if self.respond_to?(:"handle_require_user_redirection_for_#{params[:format]}", true)
                 self.send :"handle_require_user_redirection_for_#{params[:format]}"
               else
-                render :text => nil, :status => :unauthorized
+                head :unauthorized
               end
             end
           end

@@ -56,7 +56,7 @@ RSpec.describe DummyBetaController, type: :controller do
   describe "for handling requests over xhr" do
     it "should not set the flash and should return a blank body with a 401 code when not logged in" do
       @controller.logged_in_user = nil
-      xhr :get, :index, :format => "js"
+      get :index, :format => "js", xhr: true
       expect(response).to have_http_status(401)
       expect(response.body).to be_blank
       expect(flash[:alert]).to be_nil
@@ -64,7 +64,7 @@ RSpec.describe DummyBetaController, type: :controller do
 
     it "should not set the flash and should return a blank body with a 403 code when unauthorized" do
       @controller.logged_in_user = User.new
-      xhr :get, :index, :format => "js"
+      get :index, :format => "js", xhr: true
       expect(response).to have_http_status(403)
       expect(response.body).to be_blank
       expect(flash[:alert]).to be_nil
