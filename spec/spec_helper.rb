@@ -10,8 +10,7 @@ ActionMailer::Base.default_url_options[:host] = "test.com"
 
 Rails.backtrace_cleaner.remove_silencers!
 
-# Run any available migration
-ActiveRecord::Migrator.migrate File.expand_path("../dummy/db/migrate/", __FILE__)
+ActiveRecord::MigrationContext.new(File.expand_path("../dummy/db/migrate/", __FILE__), ActiveRecord::SchemaMigration).migrate
 
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
