@@ -16,7 +16,7 @@ if ActiveRecord.version < Gem::Version.create("5.2.0")
 elsif ActiveRecord.version < Gem::Version.create("6.0.0")
   ActiveRecord::MigrationContext.new File.expand_path("../dummy/db/migrate/", __FILE__)
 else
-  ActiveRecord::MigrationContext.new(File.expand_path("../dummy/db/migrate/", __FILE__), ActiveRecord::SchemaMigration).migrate(env_migration_version)
+  ActiveRecord::MigrationContext.new(File.expand_path("../dummy/db/migrate/", __FILE__), ActiveRecord::SchemaMigration).migrate
 end
 
 # Load support files

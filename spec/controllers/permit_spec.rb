@@ -5,7 +5,7 @@ require 'spec_helper.rb'
 RSpec.describe DummyController, type: :controller do
   it "should allow dogooders to do good" do
     get :do_good
-    expect(response).to be_success
+    expect(response).to be_successful
     expect(response.body).to eq('done!')
   end
 
@@ -22,7 +22,7 @@ RSpec.describe DummyController, type: :controller do
   end
   it "should use instance variables if there" do
     get :have_instance_variables
-    expect(response).to be_success
+    expect(response).to be_successful
     expect(response.body).to eq("done!")
   end
 end
